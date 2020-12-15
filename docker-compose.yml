@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+
+  plagaa:
+    build:
+      context: ./services/app
+      dockerfile: Dockerfile
+    volumes:
+      - './services/app:/usr/src/app'
+    ports:
+      - 5002:5000
+    tty: true # para que se mantenga sin necesidad de run un server
+    container_name: plagaa_back
+    environment:
+      - FLASK_APP=project/app.py #project/__init__.py
+      - FLASK_ENV=development
+      - APP_SETTINGS=project.config.DevelopmentConfig  # new
+    #  # - 'RUN=flask run --host=0.0.0.0 --port=5000'
