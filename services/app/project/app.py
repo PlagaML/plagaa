@@ -18,18 +18,23 @@ model_file_path = os.path.join(my_dir, 'model.pickle')
 scaler_file_path = os.path.join(my_dir, 'scaler.pickle')
 
 #final selected data
-feature_names = ['precip l_0', 'temp_prom l_0','precip l_5', 'temp_prom l_5',
-                 'provincia']
-numeric_feature_names = ['precip l_0', 'temp_prom l_0', 'precip l_5', 'temp_prom l_5']
-categor_feature_names = ['provincia']
+#feature_names = ['precip l_0', 'temp_prom l_0','precip l_5', 'temp_prom l_5', 'provincia']
+feature_names = ['latitud', 'longitud', 'precip l_0', 'temp_max l_0', 'temp_min l_0', 'temp_max l_2', 'temp_min l_2', 'precip l_2']
+#numeric_feature_names = ['precip l_0', 'temp_prom l_0', 'precip l_5', 'temp_prom l_5']
+numeric_feature_names = ['latitud', 'longitud', 'precip l_0', 'temp_max l_0', 'temp_min l_0', 'temp_max l_2', 'temp_min l_2', 'precip l_2']
+
+#categor_feature_names = ['provincia']
+categor_feature_names = []
+
 outcome_name = ['TARGET']
 
-categorical_engineered_features=['provincia_SAN MARTIN',
- 'provincia_PICOTA',
- 'provincia_MOYOBAMBA',
- 'provincia_BELLAVISTA',
- 'provincia_RIOJA',
- 'provincia_TOCACHE']
+#categorical_engineered_features=['provincia_SAN MARTIN',
+# 'provincia_PICOTA',
+# 'provincia_MOYOBAMBA',
+# 'provincia_BELLAVISTA',
+# 'provincia_RIOJA',
+# 'provincia_TOCACHE']
+categorical_engineered_features = []
 
 
 @app.route('/api/predict', methods=['GET','POST'])
@@ -38,13 +43,13 @@ def api_predict():
     """
     if request.method == 'POST':  #this block is only entered when the form is submitted
         
-        req_data = request.get_json () 
-        if not req_data:
-            return jsonify(error="request body cannot be empty"), 400
-        anho = req_data['anho']
+        #req_data = request.get_json () 
+        #if not req_data:
+        #    return jsonify(error="request body cannot be empty2"), 400
+        #anho = req_data['anho']
 
         features = { 
-            'anho': anho
+            'anho': 2023
         }
 
         #Load the saved model
@@ -55,11 +60,17 @@ def api_predict():
 
         
 
-        new_data = pd.DataFrame([
+        '''new_data = pd.DataFrame([
         {'Name': 'M 3', 'precip l_0': 22.068888, 'temp_prom l_0': 26.891296, 'precip l_5': 0.056287, 'temp_prom l_5': 28.582603, 'provincia': 'SAN MARTIN'},
         {'Name': 'M 1', 'precip l_0': 2.736914, 'temp_prom l_0': 26.846750, 'precip l_5': 13.684924, 'temp_prom l_5': 23.525642, 'provincia': 'PICOTA'},
         {'Name': 'M 2', 'precip l_0': 2.736914, 'temp_prom l_0': 26.846750, 'precip l_5': 13.684924, 'temp_prom l_5': 23.525642, 'provincia': 'PICOTA'},
          
+        ])'''
+        new_data = pd.DataFrame([
+    
+        {'latitud': 354860, 'longitud': 9271177, 'precip l_0': 2.271762, 'temp_max l_0': 31.162016, 'temp_min l_0': 20.965277, 'temp_max l_2': 32.038571, 'temp_min l_2': 20.915900, 'precip l_2': 1.013100},
+        {'latitud': 353419, 'longitud': 9271645, 'precip l_0': 0, 'temp_max l_0': 28.029667, 'temp_min l_0': 20.262200, 'temp_max l_2': 31.262200, 'temp_min l_2': 23.347366, 'precip l_2': 11.307649}
+
         ])
         print(new_data)
 
@@ -81,6 +92,7 @@ def api_predict():
         for feature in missing_features:
             # add zeros since feature is absent in these data samples
             prediction_features[feature] = [0] * len(prediction_features) 
+
 
         # view final feature set
         print(prediction_features)
@@ -121,11 +133,17 @@ def predict():
         model = cargarModeloSiEsNecesario()
         scaler = cargarScalerSiEsNecesario()
 
-        new_data = pd.DataFrame([
+        '''new_data = pd.DataFrame([
         {'Name': 'M 3', 'precip l_0': 22.068888, 'temp_prom l_0': 26.891296, 'precip l_5': 0.056287, 'temp_prom l_5': 28.582603, 'provincia': 'SAN MARTIN'},
         {'Name': 'M 1', 'precip l_0': 2.736914, 'temp_prom l_0': 26.846750, 'precip l_5': 13.684924, 'temp_prom l_5': 23.525642, 'provincia': 'PICOTA'},
         {'Name': 'M 2', 'precip l_0': 2.736914, 'temp_prom l_0': 26.846750, 'precip l_5': 13.684924, 'temp_prom l_5': 23.525642, 'provincia': 'PICOTA'},
          
+        ])'''
+        new_data = pd.DataFrame([
+    
+        {'latitud': 354860, 'longitud': 9271177, 'precip l_0': 2.271762, 'temp_max l_0': 31.162016, 'temp_min l_0': 20.965277, 'temp_max l_2': 32.038571, 'temp_min l_2': 20.915900, 'precip l_2': 1.013100},
+        {'latitud': 353419, 'longitud': 9271645, 'precip l_0': 0, 'temp_max l_0': 28.029667, 'temp_min l_0': 20.262200, 'temp_max l_2': 31.262200, 'temp_min l_2': 23.347366, 'precip l_2': 11.307649}
+
         ])
         print(new_data)
 
